@@ -17,7 +17,8 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
   const [form, setForm] = useState({
     cat_id: activeCat === 'all' ? (data.cats[0]?.id || "") : activeCat,
     date: new Date().toISOString().slice(0, 10),
-    weight: "", purpose: "", treatment: "", aftercare: "", todosToAdd: [], attachments: []
+    date: new Date().toISOString().slice(0, 10),
+    hospital_name: "", weight: "", purpose: "", treatment: "", aftercare: "", todosToAdd: [], attachments: []
   });
 
   const searchRef = useRef(null);
@@ -79,7 +80,7 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
       }
 
       setShowForm(false);
-      setForm({ cat_id: activeCat === 'all' ? (data.cats[0]?.id || "") : activeCat, date: new Date().toISOString().slice(0, 10), weight: "", purpose: "", treatment: "", aftercare: "", todosToAdd: [], attachments: [] });
+      setForm({ cat_id: activeCat === 'all' ? (data.cats[0]?.id || "") : activeCat, date: new Date().toISOString().slice(0, 10), hospital_name: "", weight: "", purpose: "", treatment: "", aftercare: "", todosToAdd: [], attachments: [] });
       setNewTodo("");
     } catch (err) {
       console.error(err);
@@ -211,8 +212,11 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
               return (
                 <div className="p-4 border-t border-gray-50 bg-white">
                   <div className="flex items-start justify-between gap-2 mb-3">
-                    <p className="m-0 text-[18px] font-extrabold text-gray-900 leading-tight">{log.purpose}</p>
-                    <button onClick={() => { setForm({ ...log, weight: log.weight || "", todosToAdd: [] }); setShowForm(true); }}
+                    <div>
+                      <p className="m-0 text-[18px] font-extrabold text-gray-900 leading-tight">{log.purpose}</p>
+                      {log.hospital_name && <p className="m-0 mt-1 text-[13px] font-bold text-gray-500">🏥 {log.hospital_name}</p>}
+                    </div>
+                    <button onClick={() => { setForm({ ...log, weight: log.weight || "", hospital_name: log.hospital_name || "", todosToAdd: [] }); setShowForm(true); }}
                       className="shrink-0 bg-gray-50 hover:bg-gray-100 border-none rounded-lg w-8 h-8 flex items-center justify-center cursor-pointer transition-colors">
                       <Icon name="edit" size={15} color={c.accent || '#888'} />
                     </button>
@@ -264,6 +268,7 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
             })() : (
               <div onClick={() => setExpandedId(log.id)} className="p-4 relative cursor-pointer active:bg-gray-50/50 transition-colors">
                 <p className="m-0 mb-1.5 text-[15px] font-extrabold text-gray-900">{log.purpose}</p>
+                {log.hospital_name && <p className="m-0 mb-1.5 text-[12px] font-bold text-gray-500">🏥 {log.hospital_name}</p>}
                 {log.treatment && <p className="m-0 text-[13px] text-gray-500 line-clamp-1">{log.treatment}</p>}
 
                 <div className="flex gap-2 items-center mt-3">
@@ -293,6 +298,7 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
             <Field label="날짜"><Input type="date" value={form.date} onChange={v => setForm(f => ({ ...f, date: v }))} /></Field>
             <Field label="몸무게 (kg)"><Input type="number" step="0.1" value={form.weight} onChange={v => setForm(f => ({ ...f, weight: v }))} placeholder="" /></Field>
           </div>
+          <Field label="방문 동물병원 (선택)"><Input value={form.hospital_name || ""} onChange={v => setForm(f => ({ ...f, hospital_name: v }))} placeholder="예: 튼튼동물병원" /></Field>
           <Field label="방문 목적"><Input value={form.purpose} onChange={v => setForm(f => ({ ...f, purpose: v }))} placeholder="예: 정기검진, 구충제, 알러지 확인" /></Field>
           <Field label="진료 내용"><Textarea value={form.treatment} onChange={v => setForm(f => ({ ...f, treatment: v }))} placeholder="처방 내용, 검사 항목 등" /></Field>
 

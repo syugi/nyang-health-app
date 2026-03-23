@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS public.hospital_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     cat_id UUID NOT NULL REFERENCES public.cats(id) ON DELETE CASCADE,
     date DATE NOT NULL,
+    hospital_name TEXT,
     weight NUMERIC,
     purpose TEXT NOT NULL,
     treatment TEXT,
