@@ -3,8 +3,8 @@ import React from 'react';
 export const Icon = ({ name, size = 20, color = "currentColor" }) => {
   const icons = {
     home: <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" />,
-    hospital: <><path d="M4 3v4a8 8 0 0016 0V3" /><path d="M12 11v4a4 4 0 01-4 4H5" /><circle cx="3" cy="19" r="2" /></>,
-    food: <><path d="M7 2v20M3 2v7a4 4 0 008 0V2M21 2v13h-4a5 5 0 015-5zM19 15v7" /></>,
+    hospital: <><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3" /><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4" /><circle cx="20" cy="10" r="2" /></>,
+    food: <><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.46-3.44 6-7 6s-7.56-2.54-8.5-6Z" /><path d="M18 12v.01" /><path d="M2 9v6l5-3-5-3z" /></>,
     alert: <><path d="M12 9v4M12 17h.01" /><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></>,
     camera: <><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" /><circle cx="12" cy="13" r="4" /></>,
     search: <><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></>,
