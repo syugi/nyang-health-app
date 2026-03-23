@@ -33,11 +33,11 @@ const CareSection = ({ data, activeCat, toggleTodo, addTodo, removeTodo }) => {
     return (
       <div className="flex items-start gap-2.5 py-3 border-b border-gray-100 last:border-0">
         <button onClick={() => toggleTodo(todo.id, !todo.done)}
-                className="shrink-0 mt-0.5 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer"
-                style={{
-                  borderColor: todo.done ? cat.accent : "#ddd",
-                  backgroundColor: todo.done ? cat.accent : "transparent"
-                }}>
+          className="shrink-0 mt-0.5 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer"
+          style={{
+            borderColor: todo.done ? cat.accent : "#ddd",
+            backgroundColor: todo.done ? cat.accent : "transparent"
+          }}>
           {todo.done && <Icon name="check" size={13} color="#fff" />}
         </button>
 
@@ -47,15 +47,15 @@ const CareSection = ({ data, activeCat, toggleTodo, addTodo, removeTodo }) => {
               {todo.text}
             </span>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                  style={{
-                    backgroundColor: todo.type === "routine" ? "#e8f4fb" : "#f0f8f0",
-                    color: todo.type === "routine" ? "#5aa8cc" : "#68a86e",
-                  }}>
+              style={{
+                backgroundColor: todo.type === "routine" ? "#e8f4fb" : "#f0f8f0",
+                color: todo.type === "routine" ? "#5aa8cc" : "#68a86e",
+              }}>
               {todo.type === "routine" ? "🔄 반복" : "✅ 1회"}
             </span>
             {isHospital && (
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                    style={{ backgroundColor: cat.light, color: cat.accent }}>
+                style={{ backgroundColor: cat.light, color: cat.accent }}>
                 🏥 병원
               </span>
             )}
@@ -82,14 +82,14 @@ const CareSection = ({ data, activeCat, toggleTodo, addTodo, removeTodo }) => {
           <span className="font-extrabold text-[15px] text-gray-900">케어 할 일</span>
           {pendingCount > 0 && (
             <span className="w-5 h-5 rounded-full text-[11px] font-extrabold text-white flex items-center justify-center"
-                  style={{ backgroundColor: cat.accent || '#F4A261' }}>
+              style={{ backgroundColor: cat.accent || '#F4A261' }}>
               {pendingCount}
             </span>
           )}
         </div>
         <button onClick={() => { setShowAdd(v => !v); setTimeout(() => inputRef.current?.focus(), 50); }}
-                className="w-8 h-8 rounded-xl border-none flex items-center justify-center cursor-pointer transition-colors"
-                style={{ backgroundColor: cat.light || '#FFF3E8', color: cat.accent || '#F4A261' }}>
+          className="w-8 h-8 rounded-xl border-none flex items-center justify-center cursor-pointer transition-colors"
+          style={{ backgroundColor: cat.light || '#FFF3E8', color: cat.accent || '#F4A261' }}>
           <Icon name="plus" size={18} color="currentColor" />
         </button>
       </div>
@@ -97,31 +97,31 @@ const CareSection = ({ data, activeCat, toggleTodo, addTodo, removeTodo }) => {
       {showAdd && (
         <div className="mx-4 mb-2 p-3.5 rounded-2xl" style={{ backgroundColor: cat.light || '#FFF3E8' }}>
           {activeCat === 'all' && (
-            <select value={selectedCatForAdd} onChange={e => setSelectedCatForAdd(e.target.value)} 
-                    className="w-full mb-2 p-2 rounded-lg text-sm border-none outline-none font-bold text-gray-700 bg-white/60">
+            <select value={selectedCatForAdd} onChange={e => setSelectedCatForAdd(e.target.value)}
+              className="w-full mb-2 p-2 rounded-lg text-sm border-none outline-none font-bold text-gray-700 bg-white/60">
               {data.cats.map(c => <option key={c.id} value={c.id}>{c.emoji} {c.name}</option>)}
             </select>
           )}
           <input ref={inputRef} value={addText} onChange={e => setAddText(e.target.value)}
-                 onKeyDown={e => e.key === "Enter" && handleAdd()}
-                 placeholder="할 일 입력..." className="w-full border-none bg-transparent text-sm outline-none mb-3 font-medium placeholder-gray-400" />
+            onKeyDown={e => e.key === "Enter" && handleAdd()}
+            placeholder="할 일 입력..." className="w-full border-none bg-transparent text-sm outline-none mb-3 font-medium placeholder-gray-400" />
           <div className="flex gap-2 items-center">
             <button onClick={() => setAddType("once")}
-                    className="px-3 py-1.5 rounded-xl border-2 text-xs font-bold cursor-pointer"
-                    style={{
-                      borderColor: addType === "once" ? cat.accent : "#ddd",
-                      backgroundColor: addType === "once" ? cat.accent : "#fff",
-                      color: addType === "once" ? "#fff" : "#aaa"
-                    }}>✅ 1회성</button>
+              className="px-3 py-1.5 rounded-xl border-2 text-xs font-bold cursor-pointer"
+              style={{
+                borderColor: addType === "once" ? cat.accent : "#ddd",
+                backgroundColor: addType === "once" ? cat.accent : "#fff",
+                color: addType === "once" ? "#fff" : "#aaa"
+              }}>✅ 1회성</button>
             <button onClick={() => setAddType("routine")}
-                    className="px-3 py-1.5 rounded-xl border-2 text-xs font-bold cursor-pointer"
-                    style={{
-                      borderColor: addType === "routine" ? cat.accent : "#ddd",
-                      backgroundColor: addType === "routine" ? cat.accent : "#fff",
-                      color: addType === "routine" ? "#fff" : "#aaa"
-                    }}>🔄 반복 루틴</button>
+              className="px-3 py-1.5 rounded-xl border-2 text-xs font-bold cursor-pointer"
+              style={{
+                borderColor: addType === "routine" ? cat.accent : "#ddd",
+                backgroundColor: addType === "routine" ? cat.accent : "#fff",
+                color: addType === "routine" ? "#fff" : "#aaa"
+              }}>🔄 반복 루틴</button>
             <button onClick={handleAdd} className="ml-auto px-4 py-1.5 rounded-xl border-none text-white text-xs font-extrabold cursor-pointer"
-                    style={{ backgroundColor: cat.accent }}>추가</button>
+              style={{ backgroundColor: cat.accent }}>추가</button>
           </div>
         </div>
       )}
@@ -141,7 +141,7 @@ const CareSection = ({ data, activeCat, toggleTodo, addTodo, removeTodo }) => {
         )}
         {pendingCount === 0 && (
           <div className="text-center py-6 text-gray-300">
-            <p className="text-3xl m-0 mb-1">😸</p>
+            <p className="text-3xl m-0 mb-1">🎉</p>
             <p className="text-xs m-0 font-bold">모두 완료했어요!</p>
           </div>
         )}
@@ -179,31 +179,31 @@ export const Dashboard = ({ data, activeCat, setActiveCat, toggleTodo, addTodo, 
     <div className="px-4 pb-28">
       <div className="flex gap-2.5 mb-6 overflow-x-auto pb-1 no-scrollbar">
         <button onClick={() => setActiveCat('all')}
-                className="shrink-0 min-w-[90px] p-3 rounded-[20px] border-2 cursor-pointer transition-all flex flex-col items-center"
-                style={{
-                  borderColor: activeCat === 'all' ? "transparent" : "#e0e0e0",
-                  backgroundColor: activeCat === 'all' ? '#4B5563' : "#fafafa",
-                  boxShadow: activeCat === 'all' ? `0 4px 20px #4B556355` : "none"
-                }}>
+          className="shrink-0 min-w-[90px] p-3 rounded-[20px] border-2 cursor-pointer transition-all flex flex-col items-center"
+          style={{
+            borderColor: activeCat === 'all' ? "transparent" : "#e0e0e0",
+            backgroundColor: activeCat === 'all' ? '#4B5563' : "#fafafa",
+            boxShadow: activeCat === 'all' ? `0 4px 20px #4B556355` : "none"
+          }}>
           <div className="w-11 h-11 rounded-full mb-1.5 overflow-hidden flex items-center justify-center border-2 transition-colors"
-               style={{ 
-                 backgroundColor: activeCat === 'all' ? 'rgba(255,255,255,0.2)' : '#F3F4F6',
-                 borderColor: activeCat === 'all' ? 'rgba(255,255,255,0.4)' : 'transparent'
-               }}>
-             <span className="text-[20px]">🐾</span>
+            style={{
+              backgroundColor: activeCat === 'all' ? 'rgba(255,255,255,0.2)' : '#F3F4F6',
+              borderColor: activeCat === 'all' ? 'rgba(255,255,255,0.4)' : 'transparent'
+            }}>
+            <span className="text-[20px]">🐾</span>
           </div>
           <div className={`font-extrabold text-[14px] ${activeCat === 'all' ? "text-white" : "text-gray-400"}`}>전체</div>
         </button>
         {cats.map(c => (
           <button key={c.id} onClick={() => setActiveCat(c.id)}
-                  className="shrink-0 min-w-[90px] p-3 rounded-[20px] border-2 cursor-pointer transition-all flex flex-col items-center"
-                  style={{
-                    borderColor: activeCat === c.id ? "transparent" : "#e0e0e0",
-                    backgroundColor: activeCat === c.id ? c.accent : "#fafafa",
-                    boxShadow: activeCat === c.id ? `0 4px 20px ${c.accent}55` : "none"
-                  }}>
+            className="shrink-0 min-w-[90px] p-3 rounded-[20px] border-2 cursor-pointer transition-all flex flex-col items-center"
+            style={{
+              borderColor: activeCat === c.id ? "transparent" : "#e0e0e0",
+              backgroundColor: activeCat === c.id ? c.accent : "#fafafa",
+              boxShadow: activeCat === c.id ? `0 4px 20px ${c.accent}55` : "none"
+            }}>
             <div className="w-11 h-11 rounded-full mb-1.5 overflow-hidden flex items-center justify-center border-2 border-white/40"
-                 style={{ backgroundColor: c.light }}>
+              style={{ backgroundColor: c.light }}>
               {c.avatar_url
                 ? <img src={c.avatar_url} alt={c.name} className="w-full h-full object-cover" />
                 : <span className="text-[24px]">{c.emoji}</span>}

@@ -54,7 +54,7 @@ export const IncidentPage = ({ data, activeCat, saveHealthLog, deleteHealthLog, 
       if (form.photo_url && form.photo_url.startsWith('http')) {
         finalPhotoUrl = form.photo_url;
       }
-      
+
       // Upload a new image if there's one
       if (form.imageFile) {
         const uploadedUrl = await uploadImage(form.imageFile);
@@ -99,7 +99,7 @@ export const IncidentPage = ({ data, activeCat, saveHealthLog, deleteHealthLog, 
 
       {incidents.length === 0 && (
         <div className="text-center py-10 text-gray-300">
-          <p className="text-[50px] m-0 mb-2">😸</p>
+          <p className="text-[50px] m-0 mb-2">👍</p>
           <p className="m-0 font-bold text-sm">건강 이상 기록이 없습니다</p>
         </div>
       )}
