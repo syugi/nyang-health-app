@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 export function AuthPage() {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, enterGuestMode } = useAuth();
   const [mode, setMode] = useState('login'); // 'login' | 'signup'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -133,6 +133,19 @@ export function AuthPage() {
             {submitting ? '잠시만요...' : mode === 'login' ? '로그인' : '가입하기'}
           </button>
         </form>
+
+        {/* 게스트 모드 */}
+        <div className="flex items-center gap-3 my-5">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-gray-300 font-medium">또는</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+        <button
+          onClick={enterGuestMode}
+          className="w-full py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-500 font-bold text-sm cursor-pointer hover:bg-gray-50 transition-colors"
+        >
+          🐾 게스트로 둘러보기
+        </button>
 
       </div>
     </div>

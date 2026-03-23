@@ -15,6 +15,10 @@ export function AuthProvider({ children }) {
   const [groups, setGroups] = useState([]);
   const [activeGroupId, setActiveGroupId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
+
+  const enterGuestMode = () => setIsGuest(true);
+  const exitGuestMode = () => setIsGuest(false);
 
   // 세션 상태 추적
   useEffect(() => {
@@ -109,6 +113,9 @@ export function AuthProvider({ children }) {
     groups,
     activeGroupId,
     loading,
+    isGuest,
+    enterGuestMode,
+    exitGuestMode,
     signUp,
     signIn,
     signOut,

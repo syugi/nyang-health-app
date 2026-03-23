@@ -12,16 +12,41 @@ import { Modal } from './components/ui/Modal';
 import { Icon } from './components/ui/Icon';
 import { FoodPage } from './pages/FoodPage';
 import { IncidentPage } from './pages/IncidentPage';
+import { GUEST_DATA } from './data/guestData';
 
 function App() {
-  const { user, loading: authLoading, activeGroupId, groups, signOut } = useAuth();
+  const { user, loading: authLoading, activeGroupId, groups, signOut, isGuest, exitGuestMode } = useAuth();
 
   const {
-    data, loading, saveCat, deleteCat, toggleTodo, addTodo, removeTodo,
+    data: realData, loading, saveCat, deleteCat, toggleTodo, addTodo, removeTodo,
     saveHospitalLog, deleteHospitalLog,
     saveFoodLog, deleteFoodLog,
     saveHealthLog, deleteHealthLog
   } = useNyangData(activeGroupId);
+
+  // 게스트 모드: 샘플 데이터 + 변경 시 회원가입 안내
+  const guestNoop = () => {
+    if (confirm('회원가입 후 이용할 수 있어요!\n가입하시겠어요?')) {
+      exitGuestMode();
+    }
+  };
+
+  const data = isGuest ? GUEST_DATA : realData;
+  const actions = isGuest
+    ? {
+        saveCat: guestNoop, deleteCat: guestNoop,
+        toggleTodo: guestNoop, addTodo: guestNoop, removeTodo: guestNoop,
+        saveHospitalLog: guestNoop, deleteHospitalLog: guestNoop,
+        saveFoodLog: guestNoop, deleteFoodLog: guestNoop,
+        saveHealthLog: guestNoop, deleteHealthLog: guestNoop,
+      }
+    : {
+        saveCat, deleteCat,
+        toggleTodo, addTodo, removeTodo,
+        saveHospitalLog, deleteHospitalLog,
+        saveFoodLog, deleteFoodLog,
+        saveHealthLog, deleteHealthLog,
+      };
 
   const [tab, setTab] = useState("home");
   const [activeCat, setActiveCat] = useState('all');
@@ -36,8 +61,8 @@ function App() {
     return <div className="flex h-screen items-center justify-center font-bold text-gray-400">로딩 중...</div>;
   }
 
-  // 미인증 → 로그인 페이지
-  if (!user) {
+  // 미인증 + 게스트 아님 → 로그인 페이지
+  if (!user && !isGuest) {
     return <AuthPage />;
   }
 
@@ -58,7 +83,7 @@ function App() {
   const activeCatObj = data.cats.find(c => c.id === activeCat) || data.cats[0] || {};
   const PAGE_TITLES = { home: "냥타임", hospital: "병원 기록", food: "사료·간식", incident: "건강 기록" };
 
-  if (loading) {
+  if (!isGuest && loading) {
     return <div className="flex h-screen items-center justify-center font-bold text-gray-400">데이터를 불러오는 중...</div>;
   }
 
@@ -113,10 +138,10 @@ function App() {
       )}
 
       <div className="pt-3">
-        {tab === "home" && <Dashboard data={data} activeCat={activeCat} setActiveCat={setActiveCat} toggleTodo={toggleTodo} addTodo={addTodo} removeTodo={removeTodo} goToHospitalLog={goToHospitalLog} goToIncidentLog={goToIncidentLog} />}
-        {tab === "hospital" && <HospitalPage data={data} activeCat={activeCat} saveHospitalLog={saveHospitalLog} deleteHospitalLog={deleteHospitalLog} addTodo={addTodo} expandedId={expandedHospitalId} setExpandedId={setExpandedHospitalId} />}
-        {tab === "food" && <FoodPage data={data} saveFoodLog={saveFoodLog} deleteFoodLog={deleteFoodLog} />}
-        {tab === "incident" && <IncidentPage data={data} activeCat={activeCat} saveHealthLog={saveHealthLog} deleteHealthLog={deleteHealthLog} highlightedId={highlightedIncidentId} setHighlightedId={setHighlightedIncidentId} />}
+        {tab === "home" && <Dashboard data={data} activeCat={activeCat} setActiveCat={setActiveCat} toggleTodo={actions.toggleTodo} addTodo={actions.addTodo} removeTodo={actions.removeTodo} goToHospitalLog={goToHospitalLog} goToIncidentLog={goToIncidentLog} />}
+        {tab === "hospital" && <HospitalPage data={data} activeCat={activeCat} saveHospitalLog={actions.saveHospitalLog} deleteHospitalLog={actions.deleteHospitalLog} addTodo={actions.addTodo} expandedId={expandedHospitalId} setExpandedId={setExpandedHospitalId} />}
+        {tab === "food" && <FoodPage data={data} saveFoodLog={actions.saveFoodLog} deleteFoodLog={actions.deleteFoodLog} />}
+        {tab === "incident" && <IncidentPage data={data} activeCat={activeCat} saveHealthLog={actions.saveHealthLog} deleteHealthLog={actions.deleteHealthLog} highlightedId={highlightedIncidentId} setHighlightedId={setHighlightedIncidentId} />}
       </div>
 
       <Navbar activeTab={tab} setActiveTab={setTab} accent={tab === "incident" ? "#e07070" : (activeCatObj.accent || "#F4A261")} />
@@ -125,32 +150,46 @@ function App() {
       {showSettings && !editingCat && !showGroupManager && (
         <Modal title="설정" onClose={() => setShowSettings(false)}>
           {/* 계정 & 그룹 섹션 */}
-          <div className="mb-5 p-4 rounded-2xl bg-white border border-gray-100">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <p className="m-0 font-extrabold text-sm text-gray-900">{user.email}</p>
-                {activeGroup && (
-                  <p className="m-0 text-xs text-gray-400 mt-0.5">
-                    {activeGroup.name} · {groups.length}개 그룹
-                  </p>
-                )}
+          {isGuest ? (
+            <div className="mb-5 p-4 rounded-2xl bg-orange-50 border border-orange-100 text-center">
+              <p className="m-0 font-extrabold text-sm text-gray-900 mb-1">게스트 모드</p>
+              <p className="m-0 text-xs text-gray-400 mb-3">회원가입하면 데이터를 저장하고 가족과 공유할 수 있어요!</p>
+              <button
+                onClick={exitGuestMode}
+                className="w-full py-2.5 rounded-xl border-0 text-white font-bold text-sm cursor-pointer"
+                style={{ backgroundColor: '#F4A261' }}
+              >
+                회원가입하기
+              </button>
+            </div>
+          ) : (
+            <div className="mb-5 p-4 rounded-2xl bg-white border border-gray-100">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="m-0 font-extrabold text-sm text-gray-900">{user.email}</p>
+                  {activeGroup && (
+                    <p className="m-0 text-xs text-gray-400 mt-0.5">
+                      {activeGroup.name} · {groups.length}개 그룹
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowGroupManager(true)}
+                  className="flex-1 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm font-bold text-gray-600 cursor-pointer"
+                >
+                  그룹 관리
+                </button>
+                <button
+                  onClick={handleSignOut}
+                  className="px-4 py-2.5 rounded-xl border border-red-100 bg-red-50 text-sm font-bold text-red-400 cursor-pointer"
+                >
+                  로그아웃
+                </button>
               </div>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowGroupManager(true)}
-                className="flex-1 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm font-bold text-gray-600 cursor-pointer"
-              >
-                그룹 관리
-              </button>
-              <button
-                onClick={handleSignOut}
-                className="px-4 py-2.5 rounded-xl border border-red-100 bg-red-50 text-sm font-bold text-red-400 cursor-pointer"
-              >
-                로그아웃
-              </button>
-            </div>
-          </div>
+          )}
 
           {/* 고양이 관리 */}
           <div className="text-xs font-bold text-gray-400 mb-2">고양이 관리</div>
@@ -189,8 +228,8 @@ function App() {
         <CatProfileModal
            cat={editingCat === "new" ? {} : editingCat}
            isNew={editingCat === "new"}
-           onSave={(catData) => { saveCat(catData); setEditingCat(null); }}
-           onDelete={() => { deleteCat(editingCat.id); setEditingCat(null); }}
+           onSave={(catData) => { actions.saveCat(catData); setEditingCat(null); }}
+           onDelete={() => { actions.deleteCat(editingCat.id); setEditingCat(null); }}
            onClose={() => setEditingCat(null)}
         />
       )}
