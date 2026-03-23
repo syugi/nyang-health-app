@@ -1,5 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Icon } from '../components/ui/Icon';
+import { MiniCalendar } from '../components/calendar/MiniCalendar';
+import { DayEventPanel } from '../components/calendar/DayEventPanel';
+import { useCalendarEvents } from '../hooks/useCalendarEvents';
 
 const getCat = (cats, id) => cats.find(c => c.id === id) || cats[0];
 
@@ -162,6 +165,9 @@ const CareSection = ({ data, activeCat, toggleTodo, addTodo, removeTodo }) => {
 export const Dashboard = ({ data, activeCat, setActiveCat, toggleTodo, addTodo, removeTodo, goToHospitalLog, goToIncidentLog }) => {
   const cats = data.cats || [];
   const cat = getCat(cats, activeCat) || {};
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [calendarMonth, setCalendarMonth] = useState(new Date());
+  const calendarEvents = useCalendarEvents(data, activeCat);
   const logs = data.hospitalLogs.filter(l => activeCat === 'all' || l.cat_id === activeCat).sort((a, b) => new Date(b.date) - new Date(a.date));
   const incidents = data.healthLogs.filter(i => activeCat === 'all' || i.cat_id === activeCat).slice(0, 2);
 
@@ -213,6 +219,21 @@ export const Dashboard = ({ data, activeCat, setActiveCat, toggleTodo, addTodo, 
           </button>
         ))}
       </div>
+
+      <MiniCalendar
+        currentMonth={calendarMonth}
+        onMonthChange={setCalendarMonth}
+        selectedDate={selectedDate}
+        onSelectDate={setSelectedDate}
+        events={calendarEvents}
+        accent={cat.accent || '#4B5563'}
+      />
+      <DayEventPanel
+        selectedDate={selectedDate}
+        events={calendarEvents}
+        goToHospitalLog={goToHospitalLog}
+        goToIncidentLog={goToIncidentLog}
+      />
 
       <CareSection data={data} activeCat={activeCat} toggleTodo={toggleTodo} addTodo={addTodo} removeTodo={removeTodo} />
 

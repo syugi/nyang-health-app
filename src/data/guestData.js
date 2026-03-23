@@ -31,6 +31,7 @@ export const GUEST_DATA = {
       treatment: '혈액검사, 소변검사 실시',
       aftercare: '특이사항 없음. 6개월 후 재검진.',
       weight: '4.2',
+      next_visit: '2026-09-10',
       attachments: [],
     },
     {
@@ -42,6 +43,7 @@ export const GUEST_DATA = {
       treatment: '종합백신 3차 접종',
       aftercare: '접종 후 1~2일 식욕 저하 가능. 다음 접종 1년 후.',
       weight: '5.1',
+      next_visit: '2027-02-25',
       attachments: [],
     },
   ],

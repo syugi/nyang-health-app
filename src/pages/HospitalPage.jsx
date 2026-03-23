@@ -17,8 +17,7 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
   const [form, setForm] = useState({
     cat_id: activeCat === 'all' ? (data.cats[0]?.id || "") : activeCat,
     date: new Date().toISOString().slice(0, 10),
-    date: new Date().toISOString().slice(0, 10),
-    hospital_name: "", weight: "", purpose: "", treatment: "", aftercare: "", todosToAdd: [], attachments: []
+    hospital_name: "", weight: "", purpose: "", treatment: "", aftercare: "", next_visit: "", todosToAdd: [], attachments: []
   });
 
   const searchRef = useRef(null);
@@ -67,6 +66,7 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
         ...saveData,
         weight: parseFloat(form.weight) || null,
         aftercare: form.aftercare || null,
+        next_visit: form.next_visit || null,
         attachments: urls.filter(u => u)
       });
 
@@ -80,7 +80,7 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
       }
 
       setShowForm(false);
-      setForm({ cat_id: activeCat === 'all' ? (data.cats[0]?.id || "") : activeCat, date: new Date().toISOString().slice(0, 10), hospital_name: "", weight: "", purpose: "", treatment: "", aftercare: "", todosToAdd: [], attachments: [] });
+      setForm({ cat_id: activeCat === 'all' ? (data.cats[0]?.id || "") : activeCat, date: new Date().toISOString().slice(0, 10), hospital_name: "", weight: "", purpose: "", treatment: "", aftercare: "", next_visit: "", todosToAdd: [], attachments: [] });
       setNewTodo("");
     } catch (err) {
       console.error(err);
@@ -286,6 +286,10 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
 
           <Field label="메모">
             <Textarea value={form.aftercare} onChange={v => setForm(f => ({ ...f, aftercare: v }))} placeholder="추가적인 메모나 주의사항..." rows={2} />
+          </Field>
+
+          <Field label="다음 방문 예정일">
+            <Input type="date" value={form.next_visit || ""} onChange={v => setForm(f => ({ ...f, next_visit: v }))} />
           </Field>
 
           <Field label="케어 할 일 (케어 목록에 자동 추가됨)">
