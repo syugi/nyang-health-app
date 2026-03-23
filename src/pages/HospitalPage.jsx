@@ -194,7 +194,7 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
         const c = getCat(cats, log.cat_id);
         return (
           <div key={log.id} ref={el => logRefs.current[log.id] = el} className="bg-white rounded-[20px] mb-3.5 border-[1.5px] border-gray-50 shadow-sm overflow-hidden transition-all">
-            <div onClick={() => setExpandedId(expandedId === log.id ? null : log.id)} className="px-4 py-3 flex items-center justify-between cursor-pointer" style={{ backgroundColor: c.light || '#f9f9f9' }}>
+            <div className="px-4 py-3 flex items-center justify-between bg-gray-50/50" style={{ backgroundColor: c.light || '#f9f9f9' }}>
               <div className="flex items-center gap-2">
                 <span className="text-[18px]">{c.emoji}</span>
                 <span className="text-[13px] font-extrabold" style={{ color: c.accent }}>{c.name}</span>
@@ -203,11 +203,10 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
               </div>
               <div className="flex items-center gap-2">
                 {log.weight && <span className="text-white text-[12px] font-extrabold px-3 py-1 rounded-full" style={{ backgroundColor: c.accent }}>{log.weight}kg</span>}
-                <div className="text-gray-300 ml-1 transition-transform" style={{ transform: expandedId === log.id ? 'rotate(180deg)' : 'rotate(0deg)' }}><Icon name="chevron-down" size={20} color="currentColor" /></div>
               </div>
             </div>
 
-            {expandedId === log.id ? (() => {
+            {(() => {
               const relatedTodos = (data.careTodos || []).filter(t => t.source_log_id === log.id);
               return (
                 <div className="p-4 border-t border-gray-50 bg-white">
@@ -265,24 +264,7 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
                   )}
                 </div>
               );
-            })() : (
-              <div onClick={() => setExpandedId(log.id)} className="p-4 relative cursor-pointer active:bg-gray-50/50 transition-colors">
-                <p className="m-0 mb-1.5 text-[15px] font-extrabold text-gray-900">{log.purpose}</p>
-                {log.hospital_name && <p className="m-0 mb-1.5 text-[12px] font-bold text-gray-500">🏥 {log.hospital_name}</p>}
-                {log.treatment && <p className="m-0 text-[13px] text-gray-500 line-clamp-1">{log.treatment}</p>}
-
-                <div className="flex gap-2 items-center mt-3">
-                  {(() => {
-                    const numTodos = (data.careTodos || []).filter(t => t.source_log_id === log.id).length;
-                    if (numTodos > 0) return <span className="text-[11px] font-bold bg-gray-50 border border-gray-100 text-gray-500 px-2.5 py-1 rounded-lg">✅ 할 일 {numTodos}개</span>;
-                    return null;
-                  })()}
-                  {log.attachments && log.attachments.length > 0 && (
-                    <span className="text-[11px] font-bold bg-gray-50 border border-gray-100 text-gray-500 px-2.5 py-1 rounded-lg">📷 사진 {log.attachments.length}장</span>
-                  )}
-                </div>
-              </div>
-            )}
+            })()}
           </div>
         );
       })}

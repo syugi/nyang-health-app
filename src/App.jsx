@@ -18,7 +18,7 @@ function App() {
     saveHealthLog, deleteHealthLog 
   } = useNyangData();
   const [tab, setTab] = useState("home");
-  const [activeCat, setActiveCat] = useState(null);
+  const [activeCat, setActiveCat] = useState('all');
   const [showSettings, setShowSettings] = useState(false);
   const [editingCat, setEditingCat] = useState(null); // cat obj | "new"
   const [expandedHospitalId, setExpandedHospitalId] = useState(null);
@@ -36,7 +36,7 @@ function App() {
 
   // Active cat fallback after fetching
   if (!loading && data.cats.length > 0 && !activeCat) {
-    setActiveCat(data.cats[0].id);
+    setActiveCat('all');
   }
 
   const activeCatObj = data.cats.find(c => c.id === activeCat) || data.cats[0] || {};
