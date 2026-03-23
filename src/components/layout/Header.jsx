@@ -5,8 +5,8 @@ export const Header = ({ onSettingsClick, title, accent = "#F4A261" }) => {
   return (
     <header className="sticky top-0 bg-white/90 backdrop-blur-md z-[500] h-14 px-4 flex items-center justify-between border-b border-gray-100">
       <div className="flex items-center gap-2">
-        <Icon name="paw" size={20} color={accent} />
-        <h1 className="text-lg font-extrabold text-gray-900 m-0 tracking-tight">{title}</h1>
+        <img src="/pwa-192x192.png" alt="logo" className="w-[26px] h-[26px] rounded-[6px] object-cover shadow-sm" />
+        <h1 className="text-[19px] font-black text-gray-900 m-0 tracking-tight">{title}</h1>
       </div>
       
       <button onClick={onSettingsClick} 

@@ -40,7 +40,7 @@ function App() {
   }
 
   const activeCatObj = data.cats.find(c => c.id === activeCat) || data.cats[0] || {};
-  const PAGE_TITLES = { home: "냥타임 🐾", hospital: "병원 기록", food: "사료·간식", incident: "건강 기록" };
+  const PAGE_TITLES = { home: "냥타임", hospital: "병원 기록", food: "사료·간식", incident: "건강 기록" };
 
   if (loading) {
     return <div className="flex h-screen items-center justify-center font-bold text-gray-400">데이터를 불러오는 중...</div>;

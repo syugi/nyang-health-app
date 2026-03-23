@@ -291,7 +291,7 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
           </Field>
           <div className="grid grid-cols-2 gap-2">
             <Field label="날짜"><Input type="date" value={form.date} onChange={v => setForm(f => ({ ...f, date: v }))} /></Field>
-            <Field label="몸무게 (kg)"><Input type="number" step="0.1" value={form.weight} onChange={v => setForm(f => ({ ...f, weight: v }))} placeholder="4.2" /></Field>
+            <Field label="몸무게 (kg)"><Input type="number" step="0.1" value={form.weight} onChange={v => setForm(f => ({ ...f, weight: v }))} placeholder="" /></Field>
           </div>
           <Field label="방문 목적"><Input value={form.purpose} onChange={v => setForm(f => ({ ...f, purpose: v }))} placeholder="예: 정기검진, 구충제, 알러지 확인" /></Field>
           <Field label="진료 내용"><Textarea value={form.treatment} onChange={v => setForm(f => ({ ...f, treatment: v }))} placeholder="처방 내용, 검사 항목 등" /></Field>
