@@ -3,8 +3,8 @@ import React from 'react';
 export const Icon = ({ name, size = 20, color = "currentColor" }) => {
   const icons = {
     home: <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" />,
-    hospital: <><path d="M12 6v12M6 12h12" /><rect x="3" y="3" width="18" height="18" rx="2" /></>,
-    food: <><circle cx="12" cy="12" r="9" /><path d="M8 12h8M12 8v8" /></>,
+    hospital: <><path d="M4 3v4a8 8 0 0016 0V3" /><path d="M12 11v4a4 4 0 01-4 4H5" /><circle cx="3" cy="19" r="2" /></>,
+    food: <><path d="M7 2v20M3 2v7a4 4 0 008 0V2M21 2v13h-4a5 5 0 015-5zM19 15v7" /></>,
     alert: <><path d="M12 9v4M12 17h.01" /><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></>,
     camera: <><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" /><circle cx="12" cy="13" r="4" /></>,
     search: <><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></>,
@@ -31,9 +31,6 @@ export const Icon = ({ name, size = 20, color = "currentColor" }) => {
     return <span style={{ fontSize: size }}>{icons[name]}</span>;
   }
 
-  if (name === 'hospital' || name === 'food') {
-    return <img src="/pwa-192x192.png" alt={name} style={{ width: size, height: size, borderRadius: '8px', objectFit: 'cover', opacity: 0.9 }} className="shadow-sm" />;
-  }
 
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
