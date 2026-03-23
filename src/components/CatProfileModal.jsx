@@ -91,7 +91,7 @@ export const CatProfileModal = ({ cat, onSave, onDelete, onClose, isNew = false 
             <Icon name="camera" size={14} color="#fff" />
           </div>
         </div>
-        <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePhoto} />
+        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhoto} />
         {form.avatar_url && (
           <button onClick={() => setForm(f => ({ ...f, avatar_url: null, imageFile: null }))} 
                   className="mt-1.5 text-xs text-gray-400 bg-none border-none cursor-pointer">

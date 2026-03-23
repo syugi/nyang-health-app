@@ -337,7 +337,7 @@ export const HospitalPage = ({ data, activeCat, saveHospitalLog, deleteHospitalL
                 style={{ borderColor: (cat.accent || '#ccc') + '88', backgroundColor: cat.light || '#f9f9f9' }}>
                 <Icon name="camera" size={22} color={cat.accent || '#ccc'} />
                 <span className="text-[10px] font-bold" style={{ color: cat.accent || '#ccc' }}>추가</span>
-                <input type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={handleFileChange} />
+                <input type="file" accept="image/*" multiple className="hidden" onChange={handleFileChange} />
               </label>
             </div>
           </Field>

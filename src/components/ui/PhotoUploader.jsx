@@ -39,7 +39,7 @@ export const PhotoUploader = ({ label, value, onChange, accent = "#84C5D0" }) =>
           </button>
         )}
       </div>
-      <input ref={ref} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFile} />
+      <input ref={ref} type="file" accept="image/*" className="hidden" onChange={handleFile} />
     </div>
   );
 };
