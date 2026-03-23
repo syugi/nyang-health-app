@@ -1,28 +1,45 @@
 import React, { useState } from 'react';
+import { useAuth } from './contexts/AuthContext';
 import { useNyangData } from './hooks/useNyangData';
 import { Dashboard } from './pages/Dashboard';
 import { HospitalPage } from './pages/HospitalPage';
+import { AuthPage } from './pages/AuthPage';
 import { Header } from './components/layout/Header';
 import { Navbar } from './components/layout/Navbar';
 import { CatProfileModal } from './components/CatProfileModal';
+import { GroupManager } from './components/GroupManager';
 import { Modal } from './components/ui/Modal';
 import { Icon } from './components/ui/Icon';
 import { FoodPage } from './pages/FoodPage';
 import { IncidentPage } from './pages/IncidentPage';
 
 function App() {
-  const { 
-    data, loading, saveCat, deleteCat, toggleTodo, addTodo, removeTodo, 
-    saveHospitalLog, deleteHospitalLog, 
-    saveFoodLog, deleteFoodLog, 
-    saveHealthLog, deleteHealthLog 
-  } = useNyangData();
+  const { user, loading: authLoading, activeGroupId, groups, signOut } = useAuth();
+
+  const {
+    data, loading, saveCat, deleteCat, toggleTodo, addTodo, removeTodo,
+    saveHospitalLog, deleteHospitalLog,
+    saveFoodLog, deleteFoodLog,
+    saveHealthLog, deleteHealthLog
+  } = useNyangData(activeGroupId);
+
   const [tab, setTab] = useState("home");
   const [activeCat, setActiveCat] = useState('all');
   const [showSettings, setShowSettings] = useState(false);
-  const [editingCat, setEditingCat] = useState(null); // cat obj | "new"
+  const [editingCat, setEditingCat] = useState(null);
   const [expandedHospitalId, setExpandedHospitalId] = useState(null);
   const [highlightedIncidentId, setHighlightedIncidentId] = useState(null);
+  const [showGroupManager, setShowGroupManager] = useState(false);
+
+  // 인증 로딩 중
+  if (authLoading) {
+    return <div className="flex h-screen items-center justify-center font-bold text-gray-400">로딩 중...</div>;
+  }
+
+  // 미인증 → 로그인 페이지
+  if (!user) {
+    return <AuthPage />;
+  }
 
   const goToHospitalLog = (id) => {
     setTab("hospital");
@@ -34,7 +51,6 @@ function App() {
     setHighlightedIncidentId(id);
   };
 
-  // Active cat fallback after fetching
   if (!loading && data.cats.length > 0 && !activeCat) {
     setActiveCat('all');
   }
@@ -46,12 +62,22 @@ function App() {
     return <div className="flex h-screen items-center justify-center font-bold text-gray-400">데이터를 불러오는 중...</div>;
   }
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (err) {
+      alert('로그아웃 오류: ' + err.message);
+    }
+  };
+
+  const activeGroup = groups.find(g => g.id === activeGroupId);
+
   return (
     <div className="max-w-lg mx-auto min-h-screen bg-gray-50 relative font-sans text-gray-900 pb-20 box-border">
-      <Header 
-        title={PAGE_TITLES[tab]} 
-        onSettingsClick={() => setShowSettings(true)} 
-        accent={activeCatObj.accent} 
+      <Header
+        title={PAGE_TITLES[tab]}
+        onSettingsClick={() => setShowSettings(true)}
+        accent={activeCatObj.accent}
       />
 
       {/* 탭 공통된 상단 필터 (홈 제외) */}
@@ -76,7 +102,7 @@ function App() {
                         backgroundColor: activeCat === c.id ? c.light : "transparent",
                         color: activeCat === c.id ? c.accent : "#bbb"
                       }}>
-                {c.avatar_url 
+                {c.avatar_url
                   ? <img src={c.avatar_url} className="w-5 h-5 rounded-full object-cover" alt="" />
                   : <span className="text-[15px]">{c.emoji}</span>}
                 {c.name}
@@ -95,16 +121,46 @@ function App() {
 
       <Navbar activeTab={tab} setActiveTab={setTab} accent={tab === "incident" ? "#e07070" : (activeCatObj.accent || "#F4A261")} />
 
-      {/* Settings Modal List */}
-      {showSettings && !editingCat && (
-        <Modal title="고양이 관리" onClose={() => setShowSettings(false)}>
+      {/* Settings Modal */}
+      {showSettings && !editingCat && !showGroupManager && (
+        <Modal title="설정" onClose={() => setShowSettings(false)}>
+          {/* 계정 & 그룹 섹션 */}
+          <div className="mb-5 p-4 rounded-2xl bg-white border border-gray-100">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="m-0 font-extrabold text-sm text-gray-900">{user.email}</p>
+                {activeGroup && (
+                  <p className="m-0 text-xs text-gray-400 mt-0.5">
+                    {activeGroup.name} · {groups.length}개 그룹
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowGroupManager(true)}
+                className="flex-1 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm font-bold text-gray-600 cursor-pointer"
+              >
+                그룹 관리
+              </button>
+              <button
+                onClick={handleSignOut}
+                className="px-4 py-2.5 rounded-xl border border-red-100 bg-red-50 text-sm font-bold text-red-400 cursor-pointer"
+              >
+                로그아웃
+              </button>
+            </div>
+          </div>
+
+          {/* 고양이 관리 */}
+          <div className="text-xs font-bold text-gray-400 mb-2">고양이 관리</div>
           <p className="text-[13px] text-gray-400 m-0 mb-4">탭을 눌러 프로필을 편집하세요.</p>
           {data.cats.map(c => (
             <div key={c.id} onClick={() => setEditingCat(c)}
                  className="flex items-center gap-3.5 p-3 rounded-2xl border-[1.5px] mb-2.5 cursor-pointer"
-                 style={{ 
-                   backgroundColor: activeCat === c.id ? c.light : "#fafafa", 
-                   borderColor: activeCat === c.id ? c.accent + "55" : "#f0f0f0" 
+                 style={{
+                   backgroundColor: activeCat === c.id ? c.light : "#fafafa",
+                   borderColor: activeCat === c.id ? c.accent + "55" : "#f0f0f0"
                  }}>
               <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center border-2 shrink-0"
                    style={{ backgroundColor: c.light, borderColor: c.accent + "44" }}>
@@ -123,9 +179,14 @@ function App() {
         </Modal>
       )}
 
-      {/* Open Profile Editor inside settings */}
+      {/* Group Manager Modal */}
+      {showGroupManager && (
+        <GroupManager onClose={() => setShowGroupManager(false)} />
+      )}
+
+      {/* Cat Profile Editor */}
       {editingCat && (
-        <CatProfileModal 
+        <CatProfileModal
            cat={editingCat === "new" ? {} : editingCat}
            isNew={editingCat === "new"}
            onSave={(catData) => { saveCat(catData); setEditingCat(null); }}

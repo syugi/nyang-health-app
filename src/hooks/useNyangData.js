@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
-export const useNyangData = () => {
+export const useNyangData = (activeGroupId) => {
   const [data, setData] = useState({
     cats: [],
     hospitalLogs: [],
@@ -44,15 +44,16 @@ export const useNyangData = () => {
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (activeGroupId) {
+      loadData();
+    }
+  }, [activeGroupId]);
 
   // Cat Actions
   const saveCat = async (catData) => {
-    // id가 "new-" 로 시작하거나 없으면 생성, 아니면 수정
     if (!catData.id || String(catData.id).startsWith('new-')) {
       const { id, ...newCat } = catData;
-      const { data: result, error } = await supabase.from('cats').insert(newCat).select().single();
+      const { data: result, error } = await supabase.from('cats').insert({ ...newCat, group_id: activeGroupId }).select().single();
       if (!error && result) {
         setData(d => ({ ...d, cats: [...d.cats, result] }));
         return result;
@@ -88,7 +89,7 @@ export const useNyangData = () => {
   };
 
   const addTodo = async (todoData) => {
-    const { data: result, error } = await supabase.from('care_todos').insert(todoData).select().single();
+    const { data: result, error } = await supabase.from('care_todos').insert({ ...todoData, group_id: activeGroupId }).select().single();
     if (!error && result) {
       setData(d => ({ ...d, careTodos: [...d.careTodos, result] }));
       return result;
@@ -105,7 +106,7 @@ export const useNyangData = () => {
   // Hospital Actions
   const saveHospitalLog = async (logData) => {
     if (!logData.id) {
-      const { data: result, error } = await supabase.from('hospital_logs').insert(logData).select().single();
+      const { data: result, error } = await supabase.from('hospital_logs').insert({ ...logData, group_id: activeGroupId }).select().single();
       if (error) alert("기록 저장 중 오류가 발생했습니다 ㅠㅠ\n" + error.message);
       if (!error && result) {
         setData(d => ({ ...d, hospitalLogs: [result, ...d.hospitalLogs] }));
@@ -132,7 +133,7 @@ export const useNyangData = () => {
   // Food Actions
   const saveFoodLog = async (logData) => {
     if (!logData.id) {
-      const { data: result, error } = await supabase.from('food_logs').insert(logData).select().single();
+      const { data: result, error } = await supabase.from('food_logs').insert({ ...logData, group_id: activeGroupId }).select().single();
       if (error) alert("기록 저장 중 오류: " + error.message);
       if (!error && result) {
         setData(d => ({ ...d, foodLogs: [result, ...d.foodLogs] }));
@@ -155,7 +156,7 @@ export const useNyangData = () => {
   // Health Actions
   const saveHealthLog = async (logData) => {
     if (!logData.id) {
-      const { data: result, error } = await supabase.from('health_logs').insert(logData).select().single();
+      const { data: result, error } = await supabase.from('health_logs').insert({ ...logData, group_id: activeGroupId }).select().single();
       if (error) alert("기록 저장 중 오류: " + error.message);
       if (!error && result) {
         setData(d => ({ ...d, healthLogs: [result, ...d.healthLogs] }));
@@ -175,13 +176,12 @@ export const useNyangData = () => {
     if (!error) setData(d => ({ ...d, healthLogs: d.healthLogs.filter(l => l.id !== id) }));
   };
 
-  // 1회성 데이터 갱신도 가능하도록 setData 직접 노출
-  return { 
-    data, loading, loadData, setData, 
-    saveCat, deleteCat, 
-    toggleTodo, addTodo, removeTodo, 
+  return {
+    data, loading, loadData, setData,
+    saveCat, deleteCat,
+    toggleTodo, addTodo, removeTodo,
     saveHospitalLog, deleteHospitalLog,
     saveFoodLog, deleteFoodLog,
-    saveHealthLog, deleteHealthLog 
+    saveHealthLog, deleteHealthLog
   };
 };
