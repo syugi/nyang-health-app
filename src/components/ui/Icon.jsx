@@ -31,6 +31,10 @@ export const Icon = ({ name, size = 20, color = "currentColor" }) => {
     return <span style={{ fontSize: size }}>{icons[name]}</span>;
   }
 
+  if (name === 'hospital' || name === 'food') {
+    return <img src="/pwa-192x192.png" alt={name} style={{ width: size, height: size, borderRadius: '8px', objectFit: 'cover', opacity: 0.9 }} className="shadow-sm" />;
+  }
+
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
       {icons[name]}
