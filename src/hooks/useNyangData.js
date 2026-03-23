@@ -106,12 +106,14 @@ export const useNyangData = () => {
   const saveHospitalLog = async (logData) => {
     if (!logData.id) {
       const { data: result, error } = await supabase.from('hospital_logs').insert(logData).select().single();
+      if (error) alert("기록 저장 중 오류가 발생했습니다 ㅠㅠ\n" + error.message);
       if (!error && result) {
         setData(d => ({ ...d, hospitalLogs: [result, ...d.hospitalLogs] }));
         return result;
       }
     } else {
       const { data: result, error } = await supabase.from('hospital_logs').update(logData).eq('id', logData.id).select().single();
+      if (error) alert("기록 수정 중 오류가 발생했습니다 ㅠㅠ\n" + error.message);
       if (!error && result) {
         setData(d => ({
           ...d,
@@ -131,12 +133,14 @@ export const useNyangData = () => {
   const saveFoodLog = async (logData) => {
     if (!logData.id) {
       const { data: result, error } = await supabase.from('food_logs').insert(logData).select().single();
+      if (error) alert("기록 저장 중 오류: " + error.message);
       if (!error && result) {
         setData(d => ({ ...d, foodLogs: [result, ...d.foodLogs] }));
         return result;
       }
     } else {
       const { error } = await supabase.from('food_logs').update(logData).eq('id', logData.id);
+      if (error) alert("기록 수정 중 오류: " + error.message);
       if (!error) {
         setData(d => ({ ...d, foodLogs: d.foodLogs.map(l => l.id === logData.id ? { ...l, ...logData } : l) }));
       }
@@ -152,12 +156,14 @@ export const useNyangData = () => {
   const saveHealthLog = async (logData) => {
     if (!logData.id) {
       const { data: result, error } = await supabase.from('health_logs').insert(logData).select().single();
+      if (error) alert("기록 저장 중 오류: " + error.message);
       if (!error && result) {
         setData(d => ({ ...d, healthLogs: [result, ...d.healthLogs] }));
         return result;
       }
     } else {
       const { error } = await supabase.from('health_logs').update(logData).eq('id', logData.id);
+      if (error) alert("기록 수정 중 오류: " + error.message);
       if (!error) {
         setData(d => ({ ...d, healthLogs: d.healthLogs.map(l => l.id === logData.id ? { ...l, ...logData } : l) }));
       }

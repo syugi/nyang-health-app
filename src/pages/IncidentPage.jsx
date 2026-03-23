@@ -49,10 +49,20 @@ export const IncidentPage = ({ data, activeCat, saveHealthLog, deleteHealthLog, 
   const handleSave = async () => {
     setSaving(true);
     try {
-      let finalPhotoUrl = form.photo_url;
+      let finalPhotoUrl = null;
+      // If we already have a public URL (editing), use it
+      if (form.photo_url && form.photo_url.startsWith('http')) {
+        finalPhotoUrl = form.photo_url;
+      }
+      
+      // Upload a new image if there's one
       if (form.imageFile) {
         const uploadedUrl = await uploadImage(form.imageFile);
-        if (uploadedUrl) finalPhotoUrl = uploadedUrl;
+        if (uploadedUrl) {
+          finalPhotoUrl = uploadedUrl;
+        } else {
+          alert('사진 업로드 권한 또는 저장 공간(Storage)이 준비되지 않았습니다. 사진 없이 기록됩니다.');
+        }
       }
 
       const saveData = { ...form, photo_url: finalPhotoUrl };

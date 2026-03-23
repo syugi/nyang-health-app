@@ -76,3 +76,14 @@ CREATE POLICY "Allow all operations for hospital_logs" ON public.hospital_logs F
 CREATE POLICY "Allow all operations for care_todos" ON public.care_todos FOR ALL USING (true);
 CREATE POLICY "Allow all operations for food_logs" ON public.food_logs FOR ALL USING (true);
 CREATE POLICY "Allow all operations for health_logs" ON public.health_logs FOR ALL USING (true);
+
+-- ==========================================
+-- 6. Storage Bucket (파일 업로드 스토리지)
+-- ==========================================
+-- 'nyangtime-storage'라는 이름의 Public 버킷을 생성합니다.
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('nyangtime-storage', 'nyangtime-storage', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- 스토리지 객체에 대한 모든 권한 허용 (개발 환경용)
+CREATE POLICY "Allow all storage operations" ON storage.objects FOR ALL USING (bucket_id = 'nyangtime-storage');
